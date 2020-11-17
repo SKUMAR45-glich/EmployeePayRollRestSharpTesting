@@ -68,7 +68,7 @@ namespace RestSharpTesting
 
         }
 
-        */
+        
         [TestMethod]
         public void OnAddingMultipleNewDatatoEmployeeList()
         {
@@ -95,8 +95,29 @@ namespace RestSharpTesting
                 Assert.AreEqual(item.name, dataResponse.name);
                 Assert.AreEqual(item.salary, dataResponse.salary);
             }
-            
+            */
 
+
+        [TestMethod]
+        public void UpdatingDatainEmployeeList()
+        {
+
+            RestRequest request = new RestRequest("employees/13", Method.PUT);
+            JObject jobject = new JObject();
+         
+            jobject.Add("name", "Virat");
+            jobject.Add("salary", 150000);
+            
+            request.AddParameter("application/json", jobject, ParameterType.RequestBody);
+            
+            IRestResponse response = client.Execute(request);
+            
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+            
+            Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+
+            Assert.AreEqual(dataResponse.name, "Virat");
+            Assert.AreEqual(dataResponse.salary, 150000);
         }
     }
 }
