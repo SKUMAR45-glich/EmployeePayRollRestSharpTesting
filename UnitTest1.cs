@@ -1,6 +1,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace RestSharpTesting
             IRestResponse response = client.Execute(request);
             return response;
         }
-
+        /*
 
         [TestMethod]
         public void OnCallingReturnEmployeeList()
@@ -44,6 +45,27 @@ namespace RestSharpTesting
             {
                 Console.WriteLine("ID: " + item.id + " Name: " + item.name + " Salary: " + item.salary);
             }
+        }
+        */
+
+        [TestMethod]
+        public void OnAddingNewDatatoEmployeeList()
+        {
+            RestRequest request = new RestRequest("/employees",Method.POST);
+            JObject jObject = new JObject();
+            jObject.Add("name", "VK");
+            jObject.Add("salary", 80000);
+
+            request.AddParameter("application/json", jObject, ParameterType.RequestBody);
+
+
+            IRestResponse response = client.Execute(request);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+
+            Assert.AreEqual("VK", dataResponse.name);
+            Assert.AreEqual(80000, dataResponse.salary);
+
         }
     }
 }
